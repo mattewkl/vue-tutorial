@@ -1,20 +1,22 @@
 <template>
-  <a href="#" class="mb-7 group">
-        <VideoItemThumbnail :index="index"/>
-        <VideoItemInfo :index="index"/>
-      </a>
+  <a class="mb-7 group">
+    <VideoItemThumbnail :index="index" />
+    <VideoItemInfo :index="index" />
+  </a>
 </template>
 
 <script>
-import VideoItemInfo from './VideoItemInfo.vue'
-import VideoItemThumbnail from './VideoItemThumbnail.vue'
+import VideoItemInfo from "./VideoItemInfo.vue";
+import VideoItemThumbnail from "./VideoItemThumbnail.vue";
 export default {
-  components: { VideoItemThumbnail, VideoItemInfo, VideoItemThumbnail, VideoItemThumbnail },
-  props: ['index']
-
-}
+  components: {
+    VideoItemThumbnail,
+    VideoItemInfo,
+    VideoItemThumbnail,
+    VideoItemThumbnail,
+  },
+  props: ["index"],
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

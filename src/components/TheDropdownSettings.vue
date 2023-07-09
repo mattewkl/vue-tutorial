@@ -1,11 +1,10 @@
 <template>
   <div class="relative">
-    <button
-      @click="isOpen = !isOpen"
-      class="relative p-2 focus:outline-none"
-    >
-      <BaseIcon name="dotsVertical" class="w-5 h-5" />
-    </button>
+    <BaseTooltip text="Settings">
+      <button @click="toggle" class="relative p-2 focus:outline-none">
+        <BaseIcon name="dotsVertical" class="w-5 h-5" />
+      </button>
+    </BaseTooltip>
     <transition
       enter-active-class="transition ease-out duration-100"
       enter-from-class="transition opacity-0 scale-95"
@@ -17,29 +16,16 @@
       <div
         v-show="isOpen"
         ref="dropdown"
-        @keydown.esc="isOpen = false"
+        @keydown.esc="close"
         tabindex="-1"
-        class="absolute top-9 -right-full sm:right-0 bg-white w-72 border border-t-0 focus:outline-none"
+        :class="dropdownClasses"
       >
-        <section class="py-2 border-b">
-          <ul>
-            <DropdownSettingsListItem
-              v-for="listItem in listItems.slice(0, 8)"
-              :key="listItem.label"
-              :label="listItem.label"
-              :icon="listItem.icon"
-              :with-sub-menu="listItem.withSubMenu"
-            />
-          </ul>
-        </section>
-        <section class="py-2">
-          <ul>
-            <DropdownSettingsListItem
-              :label="listItems[8].label"
-              :with-sub-menu="listItems[8].withSubMenu"
-            />
-          </ul>
-        </section>
+        <component
+          :is="menu"
+          @select-menu="showSelectedMenu"
+          @select-option="selectOption"
+          :selected-options="selectedOptions"
+        />
       </div>
     </transition>
   </div>
@@ -47,64 +33,72 @@
 
 <script>
 import BaseIcon from './BaseIcon.vue'
-import DropdownSettingsListItem from './DropdownSettingsListItem.vue'
+import BaseTooltip from './BaseTooltip.vue'
+import TheDropdownSettingsMain from './TheDropdownSettingsMain.vue'
+import TheDropdownSettingsAppearance from './TheDropdownSettingsAppearance.vue'
+import TheDropdownSettingsLanguage from './TheDropdownSettingsLanguage.vue'
+import TheDropdownSettingsLocation from './TheDropdownSettingsLocation.vue'
+import TheDropdownSettingsRestrictedMode from './TheDropdownSettingsRestrictedMode.vue'
 
 export default {
   components: {
     BaseIcon,
-    DropdownSettingsListItem
+    BaseTooltip,
+    TheDropdownSettingsMain,
+    TheDropdownSettingsAppearance,
+    TheDropdownSettingsLanguage,
+    TheDropdownSettingsLocation,
+    TheDropdownSettingsRestrictedMode
   },
 
   data () {
     return {
       isOpen: false,
-      listItems: [
-        {
-          label: 'Appearance: Light',
-          icon: 'sun',
-          withSubMenu: true
+      selectedMenu: 'main',
+      selectedOptions: {
+        theme: {
+          id: 0,
+          text: 'Device theme'
         },
-        {
-          label: 'Language: English',
-          icon: 'translate',
-          withSubMenu: true
+        language: {
+          id: 0,
+          text: 'English'
         },
-        {
-          label: 'Location: Ukraine',
-          icon: 'globeAlt',
-          withSubMenu: true
+        location: {
+          id: 0,
+          text: 'United States'
         },
-        {
-          label: 'Settings',
-          icon: 'cog',
-          withSubMenu: false
-        },
-        {
-          label: 'Your data in YouTube',
-          icon: 'shieldCheck',
-          withSubMenu: false
-        },
-        {
-          label: 'Help',
-          icon: 'questionMarkCircle',
-          withSubMenu: false
-        },
-        {
-          label: 'Send feedback',
-          icon: 'chatAlt',
-          withSubMenu: false
-        },
-        {
-          label: 'Keyboard shortcuts',
-          icon: 'calculator',
-          withSubMenu: false
-        },
-        {
-          label: 'Restricted Mode: Off',
-          icon: null,
-          withSubMenu: true
+        restrictedMode: {
+          enabled: false,
+          text: 'Off'
         }
+      },
+      dropdownClasses: [
+        'z-10',
+        'absolute',
+        'top-9',
+        '-right-full',
+        'sm:right-0',
+        'bg-white',
+        'w-72',
+        'border',
+        'border-t-0',
+        'focus:outline-none'
       ]
+    }
+  },
+
+  computed: {
+    menu () {
+      const menuComponentNames = {
+        main: 'TheDropdownSettingsMain',
+        appearance: 'TheDropdownSettingsAppearance',
+        language: 'TheDropdownSettingsLanguage',
+        location: 'TheDropdownSettingsLocation',
+        restricted_mode: 'TheDropdownSettingsRestrictedMode'
+      }
+
+      return menuComponentNames[this.selectedMenu]
     }
   },
 
@@ -117,9 +111,35 @@ export default {
   mounted () {
     window.addEventListener('click', event => {
       if (!this.$el.contains(event.target)) {
-        this.isOpen = false
+        this.close()
       }
     })
+  },
+
+  methods: {
+    showSelectedMenu (selectedMenu) {
+      this.selectedMenu = selectedMenu
+
+      this.$refs.dropdown.focus()
+    },
+
+    selectOption(option) {
+      this.selectedOptions[option.name] = option.value
+    },
+
+    toggle () {
+      this.isOpen ? this.close() : this.open()
+    },
+
+    open () {
+      this.isOpen = true
+    },
+
+    close () {
+      this.isOpen = false
+
+      setTimeout(() => (this.selectedMenu = 'main'), 100)
+    }
   }
 }
 </script>

@@ -6,7 +6,7 @@ export default {
   components: { TheSearchBtn, TheSearchInput },};
 </script>
 <template>
-  <div class="flex w-full h-full">
+  <div class=" mr-2 flex w-full ">
     <TheSearchInput />
     <TheSearchBtn/>
   </div>
