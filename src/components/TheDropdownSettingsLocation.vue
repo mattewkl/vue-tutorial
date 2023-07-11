@@ -1,8 +1,5 @@
 <template>
-  <DropdownSettingsHeader
-    title="Choose your location"
-    @back="$emit('select-menu', 'main')"
-  />
+  <DropdownSettingsHeader title="Choose your location" @back="$emit('close')" />
   <section class="py-2">
     <ul class="max-h-96 overflow-auto">
       <DropdownSettingsListItem
@@ -17,28 +14,15 @@
 </template>
 
 <script>
-import DropdownSettingsHeader from './DropdownSettingsHeader.vue'
-import DropdownSettingsListItem from './DropdownSettingsListItem.vue'
+import dropdownSubmenu from '../mixins/dropdownSubmenu'
 
 export default {
-  components: {
-    DropdownSettingsHeader,
-    DropdownSettingsListItem
-  },
-
-  props: ['selectedOptions'],
-
-  emits: ['select-menu', 'select-option'],
+  mixins: [dropdownSubmenu],
 
   data () {
     return {
+      optionName: 'location',
       locations: ['United States', 'Russia']
-    }
-  },
-
-  methods: {
-    selectOption (location) {
-      this.$emit('select-option', { name: 'location', value: location })
     }
   }
 }
