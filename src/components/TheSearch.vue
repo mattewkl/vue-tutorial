@@ -1,12 +1,33 @@
+<template>
+  <div class="flex w-full mr-2">
+    <div class="relative flex w-full">
+      <TheSearchInput
+        v-model:query="query"
+        @change-state="toggleSearchResults"
+        :hasResults="results.length"
+      />
+      <TheSearchResults v-show="isSearchResultsShown" :results="results" />
+    </div>
+    <TheSearchButton />
+  </div>
+</template>
+
 <script>
-import TheSearchBtn from "./TheSearchBtn.vue";
 import TheSearchInput from "./TheSearchInput.vue";
+import TheSearchButton from "./TheSearchBtn.vue";
 import TheSearchResults from "./TheSearchResults.vue";
 
 export default {
-  components: { TheSearchBtn, TheSearchInput, TheSearchResults },
+  components: {
+    TheSearchInput,
+    TheSearchButton,
+    TheSearchResults,
+  },
+
   data() {
     return {
+      query: "",
+      isSearchResultsShown: false,
       keywords: [
         "new york giants",
         "new york alicia keys",
@@ -23,24 +44,30 @@ export default {
         "new york giants live stream",
         "new york accent",
       ],
-      query: "",
+      
     };
   },
+
   computed: {
     results() {
+      if (!this.query) {
+        return [];
+      }
+
       return this.keywords.filter((result) => {
-        return result.includes(this.query);
+        return result.includes(this.trimmedQuery);
       });
     },
+
+    trimmedQuery() {
+      return this.query.replace(/\s+/g, " ").trim();
+    },
+    
   },
+  methods: {
+    toggleSearchResults(isSearchInputFocused) {
+      this.isSearchResultsShown = isSearchInputFocused && this.results.length
+    }
+  }
 };
 </script>
-<template>
-  <div class="mr-2 flex w-full">
-    <TheSearchInput v-model:query="query" />
-    <TheSearchResults v-show="query" :results="results" />
-    <TheSearchBtn />
-  </div>
-</template>
-
-<style></style>
