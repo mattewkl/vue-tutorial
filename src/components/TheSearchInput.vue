@@ -11,6 +11,7 @@
       @keyup.esc="handleEsc"
       @click="setState(true)"
       @input="updateQuery($event.target.value)"
+     
     />
     <button
       class="absolute top-0 right-0 h-full px-3 focus:outline-none"
@@ -54,10 +55,14 @@ export default {
 
   mounted () {
     if (window.innerWidth < 640) {
-      this.$el.focus()
+      this.$refs.input.focus()
     }
+    document.addEventListener('keydown', this.onKeyDown)
   },
+  beforeUnmount() {
+    document.removeEventListener('keydown', this.onKeyDown)
 
+  },
   methods: {
     updateQuery (query) {
       this.$emit('update:query', query)
@@ -83,6 +88,12 @@ export default {
     clear() {
       this.updateQuery('')
       this.$refs.input.focus()
+    },
+    onKeyDown(event) {
+      const isInputFocused = this.$refs.input === document.activeElement
+      if (event.code === 'Slash' && !isInputFocused) {
+        this.$refs.input.focus()
+      } 
     }
   }
 

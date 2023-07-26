@@ -17,18 +17,18 @@
         <LogoMain />
       </div>
     </div>
-    <TheSearchMobile v-if="isMobileSearchShown" @close="closeMobileSearch" />
-    <div
-      v-else
-      class="hidden sm:flex items-center justify-end p-2.5 pl-8 md:pl-12 md:px-8 flex-1 lg:px-0 lg:w-1/2 max-w-screen-md"
-    >
-      <TheSearch />
-      <BaseTooltip text="Search with your voice">
-        <button class="p-2 focus:outline-none">
-          <BaseIcon name="microphone" class="w-5 h-5" />
-        </button>
-      </BaseTooltip>
-    </div>
+     <TheSearchMobile v-if="isMobileSearchShown" @close="closeMobileSearch">
+      <TheSearch
+        :search-query="searchQuery"
+        @update-search-query="searchQuery = $event"
+      />
+    </TheSearchMobile>
+    <TheSearchMain v-else>
+      <TheSearch
+        :search-query="searchQuery"
+        @update-search-query="searchQuery = $event"
+      />
+    </TheSearchMain>
     <div
       :class="[
         'flex',
@@ -70,6 +70,7 @@ import TheSearch from './TheSearch.vue'
 import TheSearchMobile from './TheSearchMobile.vue'
 import TheDropDownApps from './TheDropDownApps.vue'
 import TheDropdownSettings from './TheDropdownSettings.vue'
+import TheSearchMain from './TheSearchMain.vue'
 
 export default {
   components: {
@@ -80,7 +81,8 @@ export default {
     TheSearch,
     TheSearchMobile,
     TheDropDownApps,
-    TheDropdownSettings
+    TheDropdownSettings,
+    TheSearchMain
   },
 
   emits: {
@@ -97,7 +99,8 @@ export default {
         'w-full',
         'bg-white',
         'bg-opacity-95'
-      ]
+      ],
+      searchQuery: ''
     }
   },
 
