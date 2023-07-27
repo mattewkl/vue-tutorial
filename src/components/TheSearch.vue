@@ -3,20 +3,24 @@
     <div class="relative flex w-full">
       <TheSearchInput
         v-model:query="query"
-        :hasResults="results.length"
+        :has-results="results.length"
         @update:query="updateSearchResults"
         @change-state="toggleSearchResults"
         @keyup.up="handlePreviousSearchResult"
         @keyup.down="handleNextSearchResult"
-        @keyup.up.prevent
+        @enter="selectSearchResult"
+        @keydown.up.prevent
       />
       <TheSearchResults
         v-show="isSearchResultsShown"
         :results="results"
         :active-result-id="activeSearchResultId"
+        @search-result-mouseenter="activeSearchResultId = $event"
+        @search-result-mouseleave="activeSearchResultId = null"
+        @search-result-click="selectSearchResult"
       />
     </div>
-    <TheSearchButton />
+    <TheSearchButton @click.stop="selectSearchResult" />
   </div>
 </template>
 
@@ -29,105 +33,136 @@ export default {
   components: {
     TheSearchInput,
     TheSearchButton,
-    TheSearchResults,
+    TheSearchResults
   },
 
-  data() {
+  props: ['searchQuery'],
+
+  emits: ['update-search-query'],
+
+  data () {
     return {
       results: [],
       query: this.searchQuery,
       activeQuery: this.searchQuery,
       isSearchResultsShown: false,
-      keywords: [
-        "new york giants",
-        "new york alicia keys",
-        "new york giants vs washington football",
-        "new york",
-        "new york song",
-        "new york new york frank sinatra",
-        "new york jets",
-        "new york city",
-        "new york giants live",
-        "new york state of mind",
-        "new york giants vs washington football live",
-        "new york giants injury",
-        "new york giants live stream",
-        "new york accent",
-      ],
       activeSearchResultId: null,
-    };
+      keywords: [
+        'new york giants',
+        'new york alicia keys',
+        'new york giants vs washington football',
+        'new york',
+        'new york song',
+        'new york new york frank sinatra',
+        'new york jets',
+        'new york city',
+        'new york giants live',
+        'new york state of mind',
+        'new york giants vs washington football live',
+        'new york giants injury',
+        'new york giants live stream',
+        'new york accent'
+      ]
+    }
   },
 
   computed: {
-    trimmedQuery() {
-      return this.query.replace(/\s+/g, " ").trim();
-    },
+    trimmedQuery () {
+      return this.query.replace(/\s+/g, ' ').trim()
+    }
   },
+
+  watch: {
+    query (query) {
+      this.$emit('update-search-query', query)
+    }
+  },
+
+  mounted () {
+    document.addEventListener('click', this.handleClick)
+  },
+
+  beforeUnmount () {
+    document.removeEventListener('click', this.handleClick)
+  },
+
   methods: {
-    updateSearchResults() {
-      this.activeSearchResultId = null;
-      this.activeQuery = this.query;
-      if (this.query === "") {
-        this.results = [];
+    handleClick () {
+      this.toggleSearchResults(false)
+    },
+
+    updateSearchResults () {
+      this.activeSearchResultId = null
+      this.activeQuery = this.query
+
+      if (this.query === '') {
+        this.results = []
       } else {
-        this.results = this.keywords.filter((result) => {
-          return result.includes(this.trimmedQuery);
-        });
+        this.results = this.keywords.filter(result => {
+          return result.includes(this.trimmedQuery)
+        })
       }
     },
-    toggleSearchResults(isSearchInputFocused) {
-      this.isSearchResultsShown = isSearchInputFocused && this.results.length;
+
+    toggleSearchResults (isSearchInputActive) {
+      this.isSearchResultsShown = isSearchInputActive && this.results.length > 0
     },
-    handlePreviousSearchResult() {
+
+    handlePreviousSearchResult () {
       if (this.isSearchResultsShown) {
-        this.makePreviousSearchResultActive();
+        this.makePreviousSearchResultActive()
+        this.updateQueryWithSearchResult()
       } else {
-        this.toggleSearchResults(true);
+        this.toggleSearchResults(true)
       }
     },
-    handleNextSearchResult() {
+
+    handleNextSearchResult () {
       if (this.isSearchResultsShown) {
-        this.makeNextSearchResultActive();
+        this.makeNextSearchResultActive()
+        this.updateQueryWithSearchResult()
       } else {
-        this.toggleSearchResults(true);
+        this.toggleSearchResults(true)
       }
     },
-    makePreviousSearchResultActive() {
+
+    makePreviousSearchResultActive () {
       if (this.activeSearchResultId === null) {
-        this.activeSearchResultId = this.results.length - 1;
+        this.activeSearchResultId = this.results.length - 1
       } else if (this.activeSearchResultId === 0) {
-        this.activeSearchResultId = null;
-      } else if (this.activeSearchResultId === null) {
-        this.activeSearchResultId = this.results.length - 1;
+        this.activeSearchResultId = null
       } else {
-        this.activeSearchResultId--;
+        this.activeSearchResultId--
       }
-      this.updateQueryWithSearchResult()
     },
-    makeNextSearchResultActive() {
+
+    makeNextSearchResultActive () {
       if (this.activeSearchResultId === null) {
-        this.activeSearchResultId = 0;
+        this.activeSearchResultId = 0
       } else if (this.activeSearchResultId + 1 === this.results.length) {
-        this.activeSearchResultId = null;
+        this.activeSearchResultId = null
       } else {
-        this.activeSearchResultId++;
+        this.activeSearchResultId++
       }
-      this.updateQueryWithSearchResult()
     },
-    updateQueryWithSearchResult() {
+
+    updateQueryWithSearchResult () {
       const hasActiveSearchResult = this.activeSearchResultId !== null
 
       this.query = hasActiveSearchResult
         ? this.results[this.activeSearchResultId]
         : this.activeQuery
     },
-  },
-  watch: {
-    query(query) {
-      this.$emit("update-search-query", query);
-    },
-  },
-  emits: ["update-search-query"],
-  props: ["search-query"],
-};
+
+    selectSearchResult () {
+      this.query = this.activeSearchResultId
+        ? this.results[this.activeSearchResultId]
+        : this.query
+
+      this.toggleSearchResults(false)
+
+      this.updateSearchResults()
+    }
+  }
+}
 </script>
