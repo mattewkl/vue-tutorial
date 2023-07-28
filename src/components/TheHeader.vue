@@ -4,7 +4,7 @@
       :class="[
         'lg:w-1/4',
         'flex',
-        isMobileSearchShown ? 'opacity-0' : 'opacity-100'
+        isMobileSearchShown ? 'opacity-0' : 'opacity-100',
       ]"
     >
       <div class="flex items-center xl:w-64 xl:bg-white pl-4">
@@ -17,18 +17,9 @@
         <LogoMain />
       </div>
     </div>
-     <TheSearchMobile v-if="isMobileSearchShown" @close="closeMobileSearch">
-      <TheSearch
-        :search-query="searchQuery"
-        @update-search-query="searchQuery = $event"
-      />
-    </TheSearchMobile>
-    <TheSearchMain v-else>
-      <TheSearch
-        :search-query="searchQuery"
-        @update-search-query="searchQuery = $event"
-      />
-    </TheSearchMain>
+    <TheSearchWrapper v-show="isSearchShown" :isSmallScreen="isSmallScreen" @close="closeMobileSearch">
+    </TheSearchWrapper>
+
     <div
       :class="[
         'flex',
@@ -38,7 +29,7 @@
         'sm:space-x-3',
         'p-2',
         'sm:px-4',
-        isMobileSearchShown ? 'opacity-0' : 'opacity-100'
+        isMobileSearchShown ? 'opacity-0' : 'opacity-100',
       ]"
     >
       <BaseTooltip text="Search with your voice">
@@ -62,15 +53,13 @@
 </template>
 
 <script>
-import BaseIcon from './BaseIcon.vue'
-import BaseTooltip from './BaseTooltip.vue'
-import LogoMain from './LogoMain.vue'
-import ButtonLogin from './ButtonLogin.vue'
-import TheSearch from './TheSearch.vue'
-import TheSearchMobile from './TheSearchMobile.vue'
-import TheDropDownApps from './TheDropDownApps.vue'
-import TheDropdownSettings from './TheDropdownSettings.vue'
-import TheSearchMain from './TheSearchMain.vue'
+import BaseIcon from "./BaseIcon.vue";
+import BaseTooltip from "./BaseTooltip.vue";
+import LogoMain from "./LogoMain.vue";
+import ButtonLogin from "./ButtonLogin.vue";
+import TheSearchWrapper from "./TheSearchWrapper.vue";
+import TheDropDownApps from "./TheDropDownApps.vue";
+import TheDropdownSettings from "./TheDropdownSettings.vue";
 
 export default {
   components: {
@@ -78,58 +67,58 @@ export default {
     BaseTooltip,
     LogoMain,
     ButtonLogin,
-    TheSearch,
-    TheSearchMobile,
+    TheSearchWrapper,
     TheDropDownApps,
     TheDropdownSettings,
-    TheSearchMain
   },
 
   emits: {
-    toggleSidebar: null
+    toggleSidebar: null,
   },
 
-  data () {
+  data() {
     return {
       isSmallScreen: false,
       isMobileSearchActive: false,
       classes: [
-        'flex',
-        'justify-between',
-        'w-full',
-        'bg-white',
-        'bg-opacity-95'
+        "flex",
+        "justify-between",
+        "w-full",
+        "bg-white",
+        "bg-opacity-95",
       ],
-      searchQuery: ''
-    }
+    };
   },
 
   computed: {
-    isMobileSearchShown () {
-      return this.isSmallScreen && this.isMobileSearchActive
-    }
+    isMobileSearchShown() {
+      return this.isSmallScreen && this.isMobileSearchActive;
+    },
+    isSearchShown() {
+      return !this.isSmallScreen || this.isMobileSearchActive
+    },
   },
 
-  mounted () {
-    this.onResize()
+  mounted() {
+    this.onResize();
 
-    window.addEventListener('resize', this.onResize)
+    window.addEventListener("resize", this.onResize);
   },
 
   methods: {
-    onResize () {
+    onResize() {
       if (window.innerWidth < 640) {
-        this.isSmallScreen = true
-        return
+        this.isSmallScreen = true;
+        return;
       }
 
-      this.closeMobileSearch()
-      this.isSmallScreen = false
+      this.closeMobileSearch();
+      this.isSmallScreen = false;
     },
 
-    closeMobileSearch () {
-      this.isMobileSearchActive = false
-    }
-  }
-}
+    closeMobileSearch() {
+      this.isMobileSearchActive = false;
+    },
+  },
+};
 </script>

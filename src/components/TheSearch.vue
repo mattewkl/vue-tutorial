@@ -36,15 +36,13 @@ export default {
     TheSearchResults
   },
 
-  props: ['searchQuery'],
 
-  emits: ['update-search-query'],
 
   data () {
     return {
       results: [],
-      query: this.searchQuery,
-      activeQuery: this.searchQuery,
+      query: '',
+      activeQuery: '',
       isSearchResultsShown: false,
       activeSearchResultId: null,
       keywords: [
@@ -72,22 +70,18 @@ export default {
     }
   },
 
-  watch: {
-    query (query) {
-      this.$emit('update-search-query', query)
-    }
-  },
-
   mounted () {
-    document.addEventListener('click', this.handleClick)
+    window.addEventListener('click', this.onClickAndResize)
+    window.addEventListener('resize', this.onClickAndResize)
   },
 
   beforeUnmount () {
-    document.removeEventListener('click', this.handleClick)
+    window.removeEventListener('click', this.onClickAndResize)
+    window.removeEventListener('resize', this.onClickAndResize)
   },
 
   methods: {
-    handleClick () {
+    onClickAndResize () {
       this.toggleSearchResults(false)
     },
 
