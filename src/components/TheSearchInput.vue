@@ -60,9 +60,6 @@ export default {
     document.addEventListener('keydown', this.onKeydown)
   },
 
-  beforeUnmount () {
-    document.removeEventListener('keydown', this.onKeydown)
-  },
 
   methods: {
     onKeydown (event) {
@@ -115,6 +112,14 @@ export default {
       this.$refs.input.focus()
 
       this.updateQuery('')
+    }
+  },
+  inject: ['isMobileSearchActive'],
+  watch: {
+    'isMobileSearchActive.value'() {
+      if (this.isMobileSearchActive) {
+        this.$nextTick(( )=> this.$refs.input.focus())
+      }
     }
   }
 }

@@ -33,18 +33,6 @@ export default {
   data () {
     return {
       isShown: false,
-      classes: [
-        'bg-gray-600',
-        'bg-opacity-80',
-        'rounded-sm',
-        'text-white',
-        'text-xs',
-        'whitespace-nowrap',
-        'p-2',
-        'transform',
-        'absolute',
-        ...this.getPositionClasses()
-      ]
     }
   },
 
@@ -61,6 +49,22 @@ export default {
       }
 
       return [topClass, 'left-1/2', '-translate-x-1/2']
+    }
+  },
+  computed: {
+    classes() {
+      return [
+        'bg-gray-600',
+        'bg-opacity-80',
+        'rounded-sm',
+        'text-white',
+        'text-xs',
+        'whitespace-nowrap',
+        'p-2',
+        'transform',
+        'absolute',
+        ...this.getPositionClasses()
+      ]
     }
   }
 }

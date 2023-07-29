@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute w-full p-2 z-10 flex">
+  <div :class="classes">
     <BaseTooltip v-if="isSmallScreen" text="Back" right>
       <button @click="$emit('close')" class="mr-2 p-2 focus:outline-none">
         <BaseIcon name="arrowLeft" class="w-5 h-5" />
@@ -12,6 +12,7 @@
         <BaseIcon name="microphone" class="w-5 h-5" />
       </button>
     </BaseTooltip>
+    <base-modal />
   </div>
 </template>
 
@@ -19,11 +20,13 @@
 import BaseIcon from "./BaseIcon.vue";
 import BaseTooltip from "./BaseTooltip.vue";
 import TheSearch from "./TheSearch.vue";
+import BaseModal from './BaseModal.vue';
 export default {
   components: {
     BaseIcon,
     BaseTooltip,
     TheSearch,
+    BaseModal,
   },
   emits: {
     close: null,
@@ -31,9 +34,7 @@ export default {
   mounted() {
     window.addEventListener("click", this.onClick);
   },
-  beforeUnmount() {
-    window.removeEventListener("click", this.onClick);
-  },
+
   methods: {
     onClick(event) {
       if (!this.$el.contains(event.target)) {
