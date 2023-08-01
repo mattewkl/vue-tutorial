@@ -1,6 +1,6 @@
 <template>
   <div
-    class="focus:outline-none z-10 inset-0 fixed"
+    :class="classes"
     tabindex="-1"
     @keydown.esc="close"
   >
@@ -43,7 +43,8 @@ export default {
   },
   data() {
     return {
-    isOpen: true
+    isOpen: true,
+    classes: ['focus:outline-none', 'z-30', 'inset-0', 'fixed']
     }
   }
 };
