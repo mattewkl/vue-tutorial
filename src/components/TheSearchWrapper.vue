@@ -7,14 +7,12 @@
     </BaseTooltip>
     <TheSearch />
     <BaseTooltip text="Search with your voice" :left="isSmallScreen">
-      <button class="p-2 focus:outline-none" @click="isVoiceModalOpen = true">
+      <button class="p-2 focus:outline-none" @click="$emit('open-voice-modal')">
         <BaseIcon name="microphone" class="w-5 h-5" />
       </button>
     </BaseTooltip>
   </div>
-  <teleport to="body">
-    <base-modal v-if="isVoiceModalOpen" @close="isVoiceModalOpen = false" />
-  </teleport>
+ 
 </template>
 
 <script>
@@ -29,17 +27,12 @@ export default {
     TheSearch,
     BaseModal,
   },
-  emits: {
-    close: null,
-  },
+  emits: ['close', 'open-voice-modal'],
   mounted() {
     window.addEventListener("click", this.onClick);
   },
-  data() {
-    return {
-      isVoiceModalOpen: false,
-    };
-  },
+
+
 
   methods: {
     onClick(event) {

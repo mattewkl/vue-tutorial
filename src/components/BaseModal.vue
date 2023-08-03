@@ -15,7 +15,7 @@
     >
       <BaseModalOverlay v-if="isOpen" @click="close" />
     </transition>
-    <div v-if="isOpen" class="relative bg-white max-w-sm mx-auto my-8">
+    <div v-if="isOpen" class="relative bg-white max-w-sm m-8">
       <div class="p-2 text-right">
         <BaseModalButtonClose @click="close" />
       </div>
@@ -44,7 +44,7 @@ export default {
   data() {
     return {
     isOpen: true,
-    classes: ['focus:outline-none', 'z-30', 'inset-0', 'fixed']
+    classes: ['focus:outline-none', 'z-30', 'inset-0', 'fixed', 'flex', 'justify-center', 'items-start']
     }
   }
 };
