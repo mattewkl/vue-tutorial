@@ -1,21 +1,13 @@
 <template>
   <BaseModal>
     <p class="text-2xl mb-52">{{ text }}</p>
-    <div class="flex justify-center items-center">
-      <span v-show="isStatus(STATUS_LISTENING, STATUS_RECORDING)" :class="buttonAnimationClasses" />
-      <button :class="buttonClasses" @click="toggleRecording">
-        <BaseIcon name="microphone" />
-      </button>
-    </div>
-    <div :class="buttonHintClasses">
-      Tap the microphone to try again
-    </div>
+    <the-button-search-with-voice @change-text="text = $event"/>
   </BaseModal>
 </template>
 
 <script>
 import BaseModal from './BaseModal.vue'
-import BaseIcon from './BaseIcon.vue'
+import TheButtonSearchWithVoice from './TheButtonSearchWithVoice.vue'
 
 const STATUS_IDLE = "idle"
 const STATUS_LISTENING = "listening"
@@ -26,108 +18,15 @@ const STATUS_QUIET = "quiet"
 export default {
   components: {
     BaseModal,
-    BaseIcon
+    TheButtonSearchWithVoice
   },
 
   data () {
     return {
-      status: 'listening',
-      recordingTimeout: null
+      text: null
     }
   },
 
-  computed: {
-    text () {
-      if (this.isStatus(STATUS_QUIET)) {
-        return "Didn't hear that. Try again."
-      }
-
-      if (this.isStatus('listening', 'recording')) {
-        return 'Listening...'
-      }
-
-      return 'Microphone off. Try again.'
-    },
-
-    buttonClasses () {
-      return [
-        this.isStatus(STATUS_LISTENING, STATUS_RECORDING) ? 'bg-red-600' : 'bg-gray-300',
-        this.isStatus(STATUS_LISTENING, STATUS_RECORDING) ? 'text-white' : 'text-black',
-        'w-16',
-        'h-16',
-        'mx-auto',
-        'rounded-full',
-        'flex',
-        'justify-center',
-        'items-center',
-        'relative',
-        'focus:outline-none'
-      ]
-    },
-
-    buttonHintClasses () {
-      return [
-        this.isStatus(STATUS_LISTENING, STATUS_RECORDING) ? 'invisible' : 'visible',
-        'text-center',
-        'text-sm',
-        'text-gray-500',
-        'mt-4'
-      ]
-    },
-
-    buttonAnimationClasses () {
-      return [
-        this.isStatus(STATUS_RECORDING) ? 'bg-gray-300' : 'border border-gray-300',
-        'animate-ping',
-        'absolute',
-        'w-14',
-        'h-14',
-        'rounded-full'
-      ]
-    }
-  },
-
-  mounted () {
-    this.handleRecordingTimeout()
-  },
-
-  beforeUnmount () {
-    clearTimeout(this.recordingTimeout)
-  },
-
-  methods: {
-    toggleRecording () {
-      clearTimeout(this.recordingTimeout)
-
-      this.updateStatus()
-
-      
-
-      this.handleRecordingTimeout()
-    },
-
-    handleRecordingTimeout () {
-      if (this.isStatus(STATUS_LISTENING, STATUS_RECORDING)) {
-        this.recordingTimeout = setTimeout(() => {
-          this.updateStatus(STATUS_QUIET)
-        }, 5000)
-      }
-    },
-    isStatus(...statuses) {
-      return statuses.includes(this.status)
-    },
-    updateStatus(status) {
-      if (status) {
-        this.status = status
-      }
-      else if (this.isStatus(STATUS_RECORDING)) {
-        this.status = STATUS_IDLE
-      } else if (this.isStatus(STATUS_LISTENING)) {
-        this.status = STATUS_RECORDING
-      } else {
-        this.status = STATUS_LISTENING
-      }
-    }
-  }
+  
 }
 </script>
