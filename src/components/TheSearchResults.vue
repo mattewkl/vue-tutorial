@@ -14,51 +14,70 @@
         </span>
       </li>
     </ul>
-    <a href="#" :class="reportLinkClasses">Report search predictions</a>
+    <a href="#" :class="reportLinkClasses" @click="openSearchPredictionsModal"
+      >Report search predictions</a
+    >
   </div>
+  <teleport to="body">
+    <TheModalSearchPredictions
+      v-if="isSearchPredictionsModalOpen"
+      @close="isSearchPredictionsModalOpen = false"
+    />
+  </teleport>
 </template>
 
 <script>
+import TheModalSearchPredictions from "./TheModalSearchPredictions.vue";
 export default {
-  props: ['results', 'activeResultId'],
+  components: { TheModalSearchPredictions },
+  props: ["results", "activeResultId"],
 
-  data () {
+  data() {
     return {
+      isSearchPredictionsModalOpen: false,
       classes: [
-        'absolute',
-        'top-full',
-        'w-full',
-        'bg-white',
-        'border',
-        'border-t-0',
-        'border-gray-300',
-        'shadow-md',
-        'pt-4'
+        "absolute",
+        "top-full",
+        "w-full",
+        "bg-white",
+        "border",
+        "border-t-0",
+        "border-gray-300",
+        "shadow-md",
+        "pt-4",
       ],
       reportLinkClasses: [
-        'w-full',
-        'inline-block',
-        'text-right',
-        'text-xs',
-        'italic',
-        'text-gray-500',
-        'hover:text-black',
-        'pr-2'
-      ]
-    }
+        "w-full",
+        "inline-block",
+        "text-right",
+        "text-xs",
+        "italic",
+        "text-gray-500",
+        "hover:text-black",
+        "pr-2",
+      ],
+    };
   },
 
   methods: {
-    getItemClasses (resultId) {
+    getItemClasses(resultId) {
       return [
-        resultId === this.activeResultId ? 'bg-gray-100' : 'bg-transparent',
-        'text-black',
-        'px-3',
-        'py-1',
-        'select-none',
-        'truncate'
-      ]
-    }
-  }
-}
+        resultId === this.activeResultId ? "bg-gray-100" : "bg-transparent",
+        "text-black",
+        "px-3",
+        "py-1",
+        "select-none",
+        "truncate",
+      ];
+    },
+    openSearchPredictionsModal() {
+      this.isSearchPredictionsModalOpen = true;
+    },
+  },
+  emits: [
+    "search-result-mouseenter",
+    "search-result-mouseleave",
+    "search-result-click",
+  ],
+};
 </script>

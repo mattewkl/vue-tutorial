@@ -1,5 +1,5 @@
 <template>
-  <BaseModal>
+  <BaseModal with-close-button>
     <p class="text-2xl mb-52">{{ text }}</p>
     <the-button-search-with-voice @change-text="text = $event"/>
   </BaseModal>

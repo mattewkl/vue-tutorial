@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="classes"
-    tabindex="-1"
-    @keydown.esc="close"
-  >
+  <div :class="classes" tabindex="-1" @keydown.esc="close">
     <transition
       appear
       enter-active-class=" ease-out duration-200"
@@ -16,10 +12,11 @@
       <BaseModalOverlay v-if="isOpen" @click="close" />
     </transition>
     <div v-if="isOpen" class="relative bg-white w-2/3 m-8">
-      <div class="p-2 text-right">
+      <div v-if="withCloseButton" class="p-2 text-right">
         <BaseModalButtonClose @click="close" />
       </div>
-      <div class="p-6"><slot/></div>
+      <div class="p-6"><slot /></div>
+      <div class="flex border-t border-gray-300 py-2" v-if="$slots.footer"><slot name="footer" :close="close"/></div>
     </div>
   </div>
 </template>
@@ -33,9 +30,8 @@ export default {
   emits: ["close"],
   methods: {
     close() {
-      this.isOpen = false
+      this.isOpen = false;
       setTimeout(() => this.$emit("close"), 100);
-      
     },
   },
   mounted() {
@@ -43,10 +39,21 @@ export default {
   },
   data() {
     return {
-    isOpen: true,
-    classes: ['focus:outline-none', 'z-30', 'inset-0', 'fixed', 'flex', 'justify-center', 'items-start']
-    }
-  }
+      isOpen: true,
+      classes: [
+        "focus:outline-none",
+        "z-30",
+        "inset-0",
+        "fixed",
+        "flex",
+        "justify-center",
+        "items-start",
+      ],
+    };
+  },
+  props: {
+    withCloseButton: Boolean,
+  },
 };
 </script>
 
