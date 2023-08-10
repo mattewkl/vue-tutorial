@@ -21,6 +21,7 @@
   <teleport to="body">
     <TheModalSearchPredictions
       v-if="isSearchPredictionsModalOpen"
+      :search-predictions="results"
       @close="isSearchPredictionsModalOpen = false"
     />
   </teleport>

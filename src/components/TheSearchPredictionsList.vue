@@ -5,16 +5,14 @@
       :key="label"
       class="flex items-center"
     >
-      <input
-        type="checkbox"
-        class="h-5 w-5 cursor-pointer"
+      <BaseCheckbox
         :id="index"
         :value="label"
+        v-bind="$attrs"
         v-model="selectedSearchPredictions"
-      />
-      <label :for="index" class="pl-4 cursor-pointer flex-grow">
+      >
         {{ label }}
-      </label>
+      </BaseCheckbox>
     </div>
   </div>
 </template>
