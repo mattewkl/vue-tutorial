@@ -6,25 +6,12 @@
       :search-predictions="searchPredictions"
     />
     <p class="text-xs text-gray-600 mt-5">The selected predictions are:</p>
-    <div class="space-y-3 text-black text-sm mt-5">
-      <div
-        class="flex items-center"
-        v-for="(label, index) in searchPredictionCategories"
-        :key="label"
-      >
-        <input
-          type="radio"
-          :id="`search-predictions-category-${index}`"
-          :value="label"
-          class="w-5 h-5 cursor-pointer"
-          v-model="selectedSearchPredictionCategory"
-        />
-        <label
-          :for="`search-predictions-category-${index}`"
-          class="pl-4 cursor-pointer flex-grow"
-          >{{ label }}</label
-        >
-      </div>
+    <TheSearchPredictionsCategories
+      :categories="searchPredictionCategories"
+      v-model="selectedSearchPredictionCategory"
+    />
+    <div class="text-black text-sm mt-6 ">
+      <BaseTextarea v-model="searchPredictionDetails" />
     </div>
     <template #footer="{ close }">
       <BaseButton @click="close" class="ml-auto"> Cancel </BaseButton>
@@ -39,12 +26,16 @@
 import BaseModal from "./BaseModal.vue";
 import TheSearchPredictionsList from "./TheSearchPredictionsList.vue";
 import BaseButton from "./BaseButton.vue";
+import TheSearchPredictionsCategories from './TheSearchPredictionsCategories.vue';
+import BaseTextarea from './BaseTextarea.vue'
 
 export default {
   components: {
     BaseModal,
     TheSearchPredictionsList,
     BaseButton,
+    TheSearchPredictionsCategories,
+    BaseTextarea
   },
   data() {
     return {
@@ -57,6 +48,7 @@ export default {
         "Dangerous and harmful activity",
         "Other",
       ],
+      searchPredictionsDetails: '',
     };
   },
   props: {
