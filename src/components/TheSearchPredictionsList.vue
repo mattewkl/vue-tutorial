@@ -18,7 +18,9 @@
 </template>
 
 <script>
+import BaseCheckbox from './BaseCheckbox.vue'
 export default {
+  components: { BaseCheckbox },
   props: {
     searchPredictions: Array,
     modelValue: Array

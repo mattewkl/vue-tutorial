@@ -4,7 +4,7 @@
     class="h-5 w-5 cursor-pointer"
     :id="id"
     v-bind="$attrs"
-    v-model="modelValue"
+    v-model="selectedSearchPredictions"
   />
   <label v-if="$slots.default" :for="id" class="pl-4 cursor-pointer flex-grow">
     <slot />
@@ -16,6 +16,11 @@ export default {
   props: {
     id: Number,
     modelValue: Array
+  },
+  data() {
+    return {
+      selectedSearchPredictions: this.modelValue
+    }
   }
 }
 </script>
