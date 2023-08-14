@@ -10,8 +10,8 @@
       :categories="searchPredictionCategories"
       v-model="selectedSearchPredictionCategory"
     />
-    <div class="text-black text-sm mt-6 ">
-      <BaseTextarea v-model="searchPredictionDetails" />
+    <div class="text-black text-sm mt-6 relative">
+      <BaseTextarea v-model="searchPredictionDetails" :limit="10"/>
     </div>
     <template #footer="{ close }">
       <BaseButton @click="close" class="ml-auto"> Cancel </BaseButton>
